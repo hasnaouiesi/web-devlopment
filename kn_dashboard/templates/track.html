@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link href="/static/styles.css" rel="stylesheet">
+
+    <title>Tracking</title>
+
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 30px);
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .grid input {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>Tracking</h1>
+    </div>
+
+    <div class="container">
+
+        <div class="section">
+
+            <h2>{{ candidate["name"] }}</h2>
+
+            <p>
+                Academic year: {{ candidate["year"] }}
+            </p>
+
+            <p>
+                Age: {{ candidate["age"] }}
+            </p>
+
+            <div class="grid">
+
+                {% for i in range(144) %}
+
+                    <input type="checkbox">
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

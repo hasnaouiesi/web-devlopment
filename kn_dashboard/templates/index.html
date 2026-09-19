@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link href="/static/styles.css" rel="stylesheet">
+        <title>Knowledge</title>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Dashboard</h1>
+        </div>
+
+        <div class="container">
+            <div class="section">
+
+                <h2 style="color: #ce8072;">Add a candidate</h2>
+
+<form action="/" method="post" class="candidate-form">
+
+```
+<div class="form-group">
+    <label>Full Name</label>
+    <input autocomplete="off" autofocus name="Full name" placeholder="Enter full name" type="text">
+</div>
+
+<div class="form-group">
+    <label>Age</label>
+    <input autocomplete="off" name="Age" placeholder="Enter age" type="number">
+</div>
+
+<div class="form-group">
+    <label>Academic Year</label>
+    <input autocomplete="off" name="year" placeholder="e.g. 2nd year CEM" type="text">
+</div>
+
+<div class="form-group">
+    <label>Payment</label>
+    <input autocomplete="off" name="payed" placeholder="Enter amount" type="number">
+</div>
+
+<div class="form-group">
+    <label>Contact</label>
+    <input autocomplete="off" name="contact" placeholder="Phone number" type="text" style="margin-top: 0px;">
+</div>
+
+<div class="form-group">
+    <label>Registration Date</label>
+    <input autocomplete="off" name="date" type="date">
+</div>
+
+<div class="form-group modules-group">
+    <label>Modules</label>
+    <select name="modules" multiple>
+        <option value="All subjects">All subjects</option>
+        <option value="Arabic">Arabic</option>
+        <option value="French">French</option>
+        <option value="English">English</option>
+        <option value="Math">Math</option>
+        <option value="Science">Science</option>
+        <option value="Physics">Physics</option>
+        <option value="Memorization subjects">Memorization subjects</option>
+    </select>
+</div>
+
+<div class="form-action">
+    <button type="submit">Add Candidate</button>
+</div>
+```
+
+</form>
+
+
+            </div>
+
+            <div class="section">
+
+                <h2 style="color: #ce8072;" >All candidates</h2>
+                {% for level in ["lycee", "cem", "primer" ] %}
+                    <table>
+                        
+                            <thead>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Age</th>
+                                    <th>Payed</th>
+                                    <th>contact</th>
+                                    <th>Acadimic year</th>
+                                    <th>inscription date</th>
+                                    <th>Modules</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                        
+
+                        <tbody>
+			     
+			     	<h3 style=" margin-top: 50px;
+				color: #218380;	
+				">
+					{{ level.upper() }}
+			     	</h3>
+			     
+                            {% for row in app_tab %}
+                                {% if level == "cem" %}
+                                    {% set show = "cem" in row["year"].lower() %}
+
+                                {% elif level == "lycee" %}
+                                    {% set show = "lycee" in row["year"].lower() %}
+
+                                {% else %}
+                                    {% set show = "cem" not in row["year"].lower() and "lycee" not in row["year"].lower() %}
+                                {% endif %}
+
+
+                                {% if show %}
+
+                                    <tr>
+                                        <td>{{ row["name"] }}</td>
+                                        <td>{{ row["age"] }}</td>
+                                        <td>
+                                            <input
+                                                type="number"
+                                                name="payed"
+                                                value="{{ row['payed'] }}"
+                                                id="payed-{{ row['id'] }}"
+                                                 oninput="savePayed({{ row['id'] }}, this.value)"
+                                            >
+                                        </td>
+                                        <td>{{ row["contact"] }}</td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                name="year"
+                                                value="{{ row['year'] }}"
+                                                id="year-{{ row['id'] }}"
+                                                onchange="savedatas({{ row['id'] }}, this.value)"
+
+                                            >
+					</td>
+                                        <td>
+					    <input
+                                                type="date"
+                                                name="date"
+                                                value="{{ row['date'] }}"
+                                                id="date-{{ row['id'] }}"
+                                                onchange="savedatas({{ row['id'] }}, this.value)"
+	
+                                            >
+
+					</td>
+                                        <td>					     
+					    <input
+                                                type="text"
+                                                name="modules"
+                                                value="{{ row['modules'] }}"
+                                                id="modules-{{ row['id'] }}"
+                                                onchange="savedatas({{ row['id'] }}, this.value)"
+
+					    >
+					</td>
+
+                                        <td>
+                                            <button type="button"
+                                                    onclick="toggleTracking({{ row['id'] }})">
+                                                Tracking
+                                            </button>
+                                        </td>
+
+                                        <td>
+                                            <form action="/deleting" method="post">
+                                                <input type="hidden" name="id" value="{{ row['id'] }}">
+                                                <button type="submit">
+                                                    Delete
+                                                </button>
+                                            </form>
+
+                                        </td>
+                                    </tr>
+
+
+                                    <!-- Tracking row -->
+                                    <tr id="tracking-{{ row['id'] }}" style="display: none;">
+                                        <td colspan="9">
+
+                                            <div class="tracking-section">
+
+                                                <label>
+                                                    Tracking year:
+                                                </label>
+
+                                                <input
+                                                    type="number"
+                                                    min="2026"
+                                                    value="2026"
+                                                    id="tracking-year-{{ row['id'] }}"
+                                                    onchange="loadTracking({{ row['id'] }})"
+                                                >
+
+                                                <div
+                                                    class="grid"
+                                                    id="grid-{{ row['id'] }}"
+                                                ></div>
+
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                {% endfor %}
+            </div>
+        </div>
+        <script>
+
+            function toggleTracking(candidateId) {
+
+                let row = document.getElementById("tracking-" + candidateId);
+
+                if (row.style.display === "none") {
+                    row.style.display = "table-row";
+
+                    loadTracking(candidateId);
+                }
+                else {
+                    row.style.display = "none";
+                }
+            }
+
+
+            async function loadTracking(candidateId) {
+
+                let yearInput = document.getElementById(
+                    "tracking-year-" + candidateId
+                );
+
+                let trackingYear = yearInput.value;
+
+                let grid = document.getElementById(
+                    "grid-" + candidateId
+                );
+
+                // Create the 144 checkboxes
+                grid.innerHTML = "";
+
+                for (let box = 0; box < 144; box++) {
+
+                    let checkbox = document.createElement("input");
+
+                    checkbox.type = "checkbox";
+
+                    checkbox.dataset.box = box;
+
+                    checkbox.onchange = function() {
+                        saveTracking(
+                            candidateId,
+                            trackingYear,
+                            box,
+                            checkbox.checked
+                        );
+                    };
+
+                    grid.appendChild(checkbox);
+                }
+
+
+                // Get saved boxes from database
+                let response = await fetch(
+                    "/tracking/" + candidateId + "/" + trackingYear
+                );
+
+                let data = await response.json();
+
+
+                // Restore their states
+                for (let row of data) {
+
+                    let checkbox = grid.querySelector(
+                        '[data-box="' + row.box + '"]'
+                    );
+
+                    if (checkbox) {
+                        checkbox.checked = row.checked == 1;
+                    }
+                }
+            }
+
+            async function saveTracking(
+                candidateId,
+                trackingYear,
+                box,
+                checked
+            ) {
+
+                await fetch(
+                    "/tracking/" +
+                    candidateId +
+                    "/" +
+                    trackingYear +
+                    "/" +
+                    box,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            checked: checked ? 1 : 0
+                        })
+                    }
+                );
+            }
+            async function savePayed(candidateId, payed) {
+
+
+   		 await fetch("/update-data/" + candidateId, {
+       			 method: "POST",
+
+       		 	headers: {
+          			  "Content-Type": "application/json"
+       			 },
+
+      			  body: JSON.stringify({
+       		 	    field: field,
+       			     value: value
+       			 })
+   		 });
+	  }
+        </script>
+    </body>
+</html>

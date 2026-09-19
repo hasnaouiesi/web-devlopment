@@ -1,0 +1,24 @@
+HTML Tags:
+1. <html> - Defines the HTML document.
+2. <head> - Contains information about the webpage.
+3. <body> - Contains the visible content of the webpage.
+4. <nav> - Creates the navigation bar.
+5. <h1> - Displays the main heading.
+6. <h4> - Displays section headings.
+7. <p> - Displays paragraphs of text.
+8. <img> - Displays images of guinea pigs.
+9. <a> - Creates links between pages and external resources.
+10. <iframe> - Embeds YouTube videos.
+
+CSS Properties:
+1. background-color - Sets the background color of the website.
+2. color - Sets the text color.
+3. margin - Controls spacing around elements.
+4. padding - Controls spacing inside elements.
+5. border - Adds borders around images and other elements.
+
+JavaScript:
+I used JavaScript to play a guinea pig squeaking sound when the user clicks the guinea pig button in the navigation bar.
+
+Bootstrap:
+I used Bootstrap to create and style the responsive navigation bar across the different pages.
