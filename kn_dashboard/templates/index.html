@@ -26,7 +26,7 @@
 
 <div class="form-group">
     <label>Age</label>
-    <input autocomplete="off" name="Age" placeholder="Enter age" type="number">
+    <input autocomplete="off" name="Age" placeholder="Enter age" type="number" value="0">
 </div>
 
 <div class="form-group">
@@ -135,7 +135,7 @@
                                                 name="year"
                                                 value="{{ row['year'] }}"
                                                 id="year-{{ row['id'] }}"
-                                                onchange="savedatas({{ row['id'] }}, this.value)"
+                                                onchange="savedatas({{ row['id'] }}, this.value, 'year')"
 
                                             >
 					</td>
@@ -145,7 +145,7 @@
                                                 name="date"
                                                 value="{{ row['date'] }}"
                                                 id="date-{{ row['id'] }}"
-                                                onchange="savedatas({{ row['id'] }}, this.value)"
+                                                onchange="savedatas({{ row['id'] }}, this.value, 'date')"
 	
                                             >
 
@@ -156,7 +156,7 @@
                                                 name="modules"
                                                 value="{{ row['modules'] }}"
                                                 id="modules-{{ row['id'] }}"
-                                                onchange="savedatas({{ row['id'] }}, this.value)"
+                                                onchange="savedatas({{ row['id'] }}, this.value, 'modules')"
 
 					    >
 					</td>
@@ -316,22 +316,32 @@
                     }
                 );
             }
-            async function savePayed(candidateId, payed) {
 
+            async function saveData(candidateId, field, value) {
+                const response = await fetch("/update-data/" + candidateId, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        field: field,
+                        value: value
+                    })
+                });
 
-   		 await fetch("/update-data/" + candidateId, {
-       			 method: "POST",
+                if (!response.ok) {
+                    alert("Failed to save data.");
+                }
+            }
 
-       		 	headers: {
-          			  "Content-Type": "application/json"
-       			 },
+            async function savePayed(candidateId, value) {
+                await saveData(candidateId, "payed", value);
+            }
 
-      			  body: JSON.stringify({
-       		 	    field: field,
-       			     value: value
-       			 })
-   		 });
-	  }
+            async function savedatas(candidateId, value, field) {
+                await saveData(candidateId, field, value);
+            }
+
         </script>
     </body>
 </html>

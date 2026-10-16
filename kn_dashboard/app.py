@@ -121,8 +121,10 @@ def save_tracking(candidate_id, tracking_year, box):
 
 @app.post("/update-data/<int:candidate_id>")
 def update_data(candidate_id):
+    data = request.get_json(silent=True)
 
-    data = request.get_json()
+    if not data or "field" not in data or "value" not in data:
+        return jsonify({"error": "Invalid request"}), 400
 
     field = data["field"]
     value = data["value"]
@@ -130,12 +132,12 @@ def update_data(candidate_id):
     allowed = ["payed", "year", "date", "modules"]
 
     if field not in allowed:
-        return "Invalid field", 400
+        return jsonify({"error": "Invalid field"}), 400
 
-    db.execute(
+    result = db.execute(
         f"UPDATE app_tab SET {field} = ? WHERE id = ?",
         value,
         candidate_id
     )
 
-    return "", 204
+    return jsonify({"success": True})
